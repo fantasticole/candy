@@ -1,0 +1,10 @@
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+static/
+
+# Dependency directory
+node_modules
+
+# Optional npm cache directory
+.npm
+
+.DS_Store
