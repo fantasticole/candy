@@ -44,7 +44,8 @@ Ball.prototype = {
   },
 
   checkBorders () {
-    var size = view.size;
+    let { size } = view;
+
     if (this.point.x < -this.radius)
       this.point.x = size.width + this.radius;
     if (this.point.x > size.width + this.radius)
@@ -56,7 +57,8 @@ Ball.prototype = {
   },
 
   updateShape () {
-    var segments = this.path.segments;
+    let segments = this.path.segments;
+
     for (var i = 0; i < this.numSegment; i ++)
       segments[i].point = this.getSidePoint(i);
 
@@ -64,9 +66,10 @@ Ball.prototype = {
     for (var i = 0; i < this.numSegment; i ++) {
       if (this.boundOffset[i] < this.radius / 4)
         this.boundOffset[i] = this.radius / 4;
-      var next = (i + 1) % this.numSegment;
-      var prev = (i > 0) ? i - 1 : this.numSegment - 1;
-      var offset = this.boundOffset[i];
+      let next = (i + 1) % this.numSegment;
+      let prev = (i > 0) ? i - 1 : this.numSegment - 1;
+      let offset = this.boundOffset[i];
+
       offset += (this.radius - offset) / 15;
       offset += ((this.boundOffset[next] + this.boundOffset[prev]) / 2 - offset) / 3;
       this.boundOffsetBuff[i] = this.boundOffset[i] = offset;
@@ -74,12 +77,14 @@ Ball.prototype = {
   },
 
   react (b) {
-    var dist = this.point.getDistance(b.point);
+    let dist = this.point.getDistance(b.point);
+
     if (dist < this.radius + b.radius && dist != 0) {
-      var overlap = this.radius + b.radius - dist;
-      var direc = this.point.subtract(b.point).normalize(overlap * 0.015);
-      this.vector.add(direc);
-      b.vector.subtract(direc);
+      let overlap = this.radius + b.radius - dist;
+      let direc = this.point.subtract(b.point).normalize(overlap * 0.015);
+
+      this.vector = this.vector.add(direc);
+      b.vector = b.vector.subtract(direc);
 
       this.calcBounds(b);
       b.calcBounds(this);
@@ -89,16 +94,18 @@ Ball.prototype = {
   },
 
   getBoundOffset (b) {
-    var diff = this.point.subtract(b);
-    var angle = (diff.angle + 180) % 360;
+    let diff = this.point.subtract(b);
+    let angle = (diff.angle + 180) % 360;
+
     return this.boundOffset[Math.floor(angle / 360 * this.boundOffset.length)];
   },
 
   calcBounds (b) {
     for (var i = 0; i < this.numSegment; i ++) {
-      var tp = this.getSidePoint(i);
-      var bLen = b.getBoundOffset(tp);
-      var td = tp.getDistance(b.point);
+      let tp = this.getSidePoint(i);
+      let bLen = b.getBoundOffset(tp);
+      let td = tp.getDistance(b.point);
+
       if (td < bLen) {
         this.boundOffsetBuff[i] -= (bLen  - td) / 2;
       }
