@@ -4,9 +4,9 @@ import { Rectangle, PaperScope, Path, Point, Size } from 'paper/dist/paper-core'
 import Ball from './Ball';
 
 /**
- * App
+ * FloatingBalls
  */
-export default class App extends React.Component {
+export default class FloatingBalls extends React.Component {
   constructor (props) {
     super(props);
 
@@ -48,13 +48,11 @@ export default class App extends React.Component {
     balls.forEach(ball => ball.iterate());
   }
 
-	render () {
-		return (
-			<div className='container'>
-				<canvas data-paper-resize id='canvas' ref={ el => {this.canvas = el}} />
-			</div>
-		)
-	}
+  render () {
+    return (
+      <canvas data-paper-resize id='canvas' ref={ el => {this.canvas = el}} />
+    )
+  }
 }
 
 
