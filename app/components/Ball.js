@@ -14,18 +14,36 @@ export default function Ball (r, p, v, canvas) {
   this.boundOffset = [];
   this.boundOffsetBuff = [];
   this.sidePoints = [];
+  this.path = new Path({
+    fillColor: {
+      hue: Math.random() * 360,
+      saturation: 1,
+      brightness: 1
+    },
+    blendMode: 'lighter'
+  });
+
+  for (var i = 0; i < this.numSegment; i ++) {
+    this.boundOffset.push(this.radius);
+    this.boundOffsetBuff.push(this.radius);
+    this.path.add(new Point());
+    this.sidePoints.push(new Point({
+      angle: 360 / this.numSegment * i,
+      length: 1
+    }));
+  }
 }
 
 Ball.prototype = {
-  iterate: function() {
+  iterate () {
     this.checkBorders();
     if (this.vector.length > this.maxVec)
       this.vector.length = this.maxVec;
-    this.point.add(this.vector);
+    this.point = this.point.add(this.vector);
     this.updateShape();
   },
 
-  checkBorders: function() {
+  checkBorders () {
     var size = view.size;
     if (this.point.x < -this.radius)
       this.point.x = size.width + this.radius;
@@ -37,7 +55,7 @@ Ball.prototype = {
       this.point.y = -this.radius;
   },
 
-  updateShape: function() {
+  updateShape () {
     var segments = this.path.segments;
     for (var i = 0; i < this.numSegment; i ++)
       segments[i].point = this.getSidePoint(i);
@@ -55,7 +73,7 @@ Ball.prototype = {
     }
   },
 
-  react: function(b) {
+  react (b) {
     var dist = this.point.getDistance(b.point);
     if (dist < this.radius + b.radius && dist != 0) {
       var overlap = this.radius + b.radius - dist;
@@ -70,13 +88,13 @@ Ball.prototype = {
     }
   },
 
-  getBoundOffset: function(b) {
+  getBoundOffset (b) {
     var diff = this.point.subtract(b);
     var angle = (diff.angle + 180) % 360;
     return this.boundOffset[Math.floor(angle / 360 * this.boundOffset.length)];
   },
 
-  calcBounds: function(b) {
+  calcBounds (b) {
     for (var i = 0; i < this.numSegment; i ++) {
       var tp = this.getSidePoint(i);
       var bLen = b.getBoundOffset(tp);
@@ -87,11 +105,11 @@ Ball.prototype = {
     }
   },
 
-  getSidePoint: function(index) {
+  getSidePoint (index) {
     return this.point.add(this.sidePoints[index].multiply(this.boundOffset[index]));
   },
 
-  updateBounds: function() {
+  updateBounds () {
     for (var i = 0; i < this.numSegment; i ++)
       this.boundOffset[i] = this.boundOffsetBuff[i];
   }
