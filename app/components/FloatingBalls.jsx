@@ -22,6 +22,8 @@ export default class FloatingBalls extends React.Component {
   }
 
   draw () {
+    // have the balls mirror the user based on the camera,
+    // or conform to an uploaded shape/image?
     let { view } = this.paper;
     let numBalls = 18;
 
